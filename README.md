@@ -10,8 +10,6 @@ This repository contains the source code of the c4 architecture of SRDP. It uses
 
 ## How to use this respository
 
-## How-to
-
 1. Clone this repository
 2. Install [likec4 CLI](https://likec4.dev/tooling/cli/)
 3. Use your preferred IDE with the likec4 extension:  
