@@ -1,84 +1,61 @@
 specification {
 
+  // https://brand.mozilla.com/document/267#/visual-identity/color
+  color foundation-orange #F06C12
+  color foundation-yellow #EED800
+  color foundation-green #20C376
+  color foundation-blue #23A5E9
+  color mozilla-black #161616
+
   element actor {
     style {
       shape person
+      color foundation-orange
+    }
+  }
+  element system {
+    style {
+      color foundation-blue
+    }
+  }
+  element external-system {
+    style {
+      color gray
+    }
+  }
+  element container {
+    style {
+      color foundation-green
+      shape component
+    }
+  }
+
+  element platform {
+    style {
       color green
     }
   }
 
-  element system {
-    notation "Software System"
+  element service {
     style {
-      opacity 20%
+      color blue
     }
   }
-
-  element external-system {
-    notation "External Software System"
-    style {
-      opacity 20%
-      color muted
-    }
-  }
-
-  element application
-
   element component {
     style {
-      opacity 20%
-    }
-  }
-  element service {
-    link https://github.com/likec4/template 'Repository'
-  }
-
-  element webapp {
-    #teamA
-    notation "Web Application"
-    style {
-      shape browser
-    }
-  }
-  element mobile {
-    #teamA
-    notation "Mobile Application"
-    style {
-      shape mobile
+      color indigo
     }
   }
   element database {
-    notation "Database"
-    technology "PostgreSQL"
     style {
       shape storage
-      icon tech:postgresql
-      opacity 30%
+      color amber
     }
   }
-  element db-table {
-    notation "Database Table"
+  element bucket {
     style {
       shape storage
-      icon tech:postgresql
+      color sky
     }
-  }
-
-  tag deprecated {
-    color rgb(100 100 100)
-  }
-  tag next
-  tag v1
-  tag v1_1
-  tag v2
-  tag teamA
-  tag teamB
-
-  relationship solid {
-    line solid
-  }
-
-  relationship many-to-many {
-    line dotted
   }
 }

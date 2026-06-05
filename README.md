@@ -2,7 +2,7 @@
 
 This repository contains the source code of the c4 architecture of SRDP. It uses [LikeC4](https://likec4.dev/) do describe the architecture as code, using the [standard template](https://github.com/likec4/template):
 
-- LikeC4 sources ([`/src`](./src/)). Use `.likec4` as the standard filename extension.
+- LikeC4 sources ([`/src`](./src/)). Use `.c4` as the standard filename extension.
 - Model validation ([`/test/validate-model.spec.ts`](./test/validate-model.spec.ts))
 - Deploy to github pages ([`pages.yml`](./.github/workflows/pages.yml))
 - Project configuration with custom generator ([`likec4.config.ts`](./likec4.config.ts))  
