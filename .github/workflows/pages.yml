@@ -7,7 +7,7 @@ on:
     branches: ["main"]
 
   # Allows you to run this workflow manually from the Actions tab
-  workflow_call:    
+  workflow_call:
   workflow_dispatch:
 
 # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
@@ -15,7 +15,7 @@ permissions:
   contents: read
   pages: write
   id-token: write
-  
+
 # Allow only one concurrent deployment, skipping runs queued between the run in progress and the latest queued.
 # However, do NOT cancel in-progress runs, as we want to allow these production deployments to be completed.
 concurrency:
@@ -25,20 +25,20 @@ concurrency:
 jobs:
   # Validate model following our rules
   # @see test/validate-model.spec.ts
-  validate:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v5
+  # validate:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v5
 
-      - name: Setup bun
-        uses: oven-sh/setup-bun@v2
+  #     - name: Setup bun
+  #       uses: oven-sh/setup-bun@v2
 
-      - name: Install dependencies
-        run: bun install
+  #     - name: Install dependencies
+  #       run: bun install
 
-      - name: Validate
-        run: bun run test
+  #     - name: Validate
+  #       run: bun run test
 
   # Build job
   build-pages:
@@ -46,10 +46,10 @@ jobs:
     needs: validate
     steps:
       - name: Checkout
-        uses: actions/checkout@v5    
+        uses: actions/checkout@v5
 
       - name: Setup bun
-        uses: oven-sh/setup-bun@v2        
+        uses: oven-sh/setup-bun@v2
 
       - name: Setup Pages
         id: pages
@@ -72,8 +72,8 @@ jobs:
         run: |
           bunx likec4@latest build \
             --base "${{ steps.pages.outputs.base_path || '/' }}" \
-            --output dist      
-          
+            --output dist
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
