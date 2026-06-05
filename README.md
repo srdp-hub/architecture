@@ -1,35 +1,26 @@
-# LikeC4 Template
+# SRDP c4 architecture
 
-This template is an example of how to use LikeC4.  
-Contains:
+This repository contains the source code of the c4 architecture of SRDP. It uses [LikeC4](https://likec4.dev/) do describe the architecture as code, using the [standard template](https://github.com/likec4/template):
 
-- LikeC4 sources ([`/src`](./src/))
+- LikeC4 sources ([`/src`](./src/)). Use `.likec4` as the standard filename extension.
 - Model validation ([`/test/validate-model.spec.ts`](./test/validate-model.spec.ts))
 - Deploy to github pages ([`pages.yml`](./.github/workflows/pages.yml))
 - Project configuration with custom generator ([`likec4.config.ts`](./likec4.config.ts))  
 
-Demo - [https://template.likec4.dev](https://template.likec4.dev/view/cloud)
 
-Try it online:
-
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/~/github.com/likec4/template?file=src/model.c4)
-
-Or:
--  [github.dev](https://github.dev/likec4/template/blob/main/src/model.c4)
--  [vscode.dev](https://vscode.dev/github/likec4/template/src/model.c4)
-
-> You will get popup suggesting to install "LikeC4" extension.  
-> Agree to get syntax highlighting, completions and other features in likec4 files
+## How to use this respository
 
 ## How-to
 
-1. Create a new repository from this template
-2. Pull your repository and open in VSCode
-3. Install suggested [LikeC4 extension](https://marketplace.visualstudio.com/items?itemName=likec4.likec4)
+1. Clone this repository
+2. Install [likec4 CLI](https://likec4.dev/tooling/cli/)
+3. Use your preferred IDE with the likec4 extension:  
+  - [VS Code](https://marketplace.visualstudio.com/items?itemName=likec4.likec4)
+  - [Zed](https://github.com/Lenivvenil/zed-likec4)
 
 Now you can edit likec4 sources, refactor, navigate and preview diagrams.
 
-### CLI
+### CLI quickstart
 
 You can install globally, locally and use scripts from `package.json`, or just via `npx`  
 Check [documentation](https://likec4.dev/tooling/cli/)  
@@ -86,7 +77,3 @@ npx likec4 build -o ./dist
 
 This template contains workflow to deploy to github pages on every push to `main` branch.  
 Check [`.github/workflows/pages.yml`](./.github/workflows/pages.yml)
-
-## License
-
-This project is released under the [MIT License](LICENSE)
