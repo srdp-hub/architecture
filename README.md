@@ -1,6 +1,6 @@
 # SRDP c4 architecture
 
-This repository contains the source code of the c4 architecture of SRDP. It uses [LikeC4](https://likec4.dev/) do describe the architecture as code, using the [standard template](https://github.com/likec4/template):
+This repository contains the source code of the c4 architecture of SRDP. It uses [LikeC4](https://likec4.dev/) to describe the architecture as code, using the [standard template](https://github.com/likec4/template):
 
 - LikeC4 sources ([`/src`](./src/)). Use `.c4` as the standard filename extension.
 - Model validation ([`/test/validate-model.spec.ts`](./test/validate-model.spec.ts))
