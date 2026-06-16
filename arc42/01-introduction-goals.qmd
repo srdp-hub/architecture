@@ -1,0 +1,89 @@
+# Introduction and Goals {#sec-introduction-and-goals}
+
+SRDP aims to provide an integrated solution to deploy and maintain a lakehouse platform for data management, processing, and analytics. The platform is designed to support a wide range of data sources, formats, and processing frameworks, enabling users to easily ingest, store, process, and analyze their data in a unified environment. While the lakehouse solution is widely used, there is no authotitative reference architecture for it. SRDP aims to fill this gap by providing a comprehensive and well-documented architecture that can serve as a reference for organizations looking to implement a lakehouse platform using mature open source software (OSS) components.
+
+Schneider et al. [(2024)](https://link.springer.com/article/10.1007/s42979-024-02737-0) provide a comprehensive overview of the lakehouse architecture, its components, and its benefits. We summarize their findings into requirements and quality goals.
+
+
+## Requirements Overview {#sec-requirements-overview}
+
+We define eight distinct technical requirements for a true lakehouse architecture, in two groups of four.
+
+### Storage & file format foundation
+
+::: {.list-table}
+- - Requirement
+  - Explanation
+- - **1. Decoupled Compute and Storage**
+  - The architecture must strictly isolate processing clusters from the persistent storage tier. This allows independent elastic scaling of CPU/Memory for transient workloads without over-provisioning or paying for idle compute.
+- - **2. Scalable, Low-Cost Storage Platform**
+  - The storage layer must rely on highly-scalable, cost-effective distributed file systems (e.g., HDFS) or cloud-native object storage (e.g., Amazon S3, Azure Blob Storage) capable of handling petabyte-scale heterogeneous data.
+- - **3. Open and Standard Data Formats**
+  - Data must be stored in open, non-proprietary file formats (e.g., Apache Parquet, Apache ORC, Apache Avro) to prevent vendor lock-in and enable seamless access by diverse query engines.
+- - **4. Tabular and Columnar Layout layouts**
+  - To ensure analytical efficiency, data must be structured in a chunked, columnar layout. It must feature embedded metadata (like min/max statistics per file block) to optimize filter push-downs, vectorization, and data skipping during query execution.
+:::
+
+### Analytical workload support
+
+::: {.list-table}
+- - Requirement
+  - Explanation
+- - **5. Transactional Integrity & ACID Guarantees**
+  - The architecture must enforce ACID properties (Atomicity, Consistency, Isolation, Durability) via a metadata/transaction management layer. This prevents data corruption during concurrent read/write operations and provides stable relational semantics.
+- - **6. Schema Enforcement and Evolution**
+  - The platform must systematically validate incoming data against strict table schemas on write to guarantee data quality for downstream Business Intelligence (BI). Concurrently, it must support schema evolution (e.g., column addition/renaming) without requiring total table rewrites.
+- - **7. Multi-Paradigm Engine Accessibility (SQL & Programmatic APIs)**
+  - *For Reporting/OLAP:* The system must provide highly-optimized SQL query interfaces to serve traditional BI tools and dashboards with low response times.<br/> *For Advanced Analytics (ML/Data Mining):* The platform must allow direct file access and support native programmatic Dataframe APIs (e.g., Spark, Python/Pandas, R) so data scientists can train machine learning models efficiently without serialization bottlenecks.
+- - **8. Unified Streaming and Batch Processing**
+  - The core table format must natively handle high-frequency, low-latency streaming ingest (appends and upserts) alongside massive historical batch updates, without locking readers out or degrading performance.
+:::
+
+
+---
+
+## Quality Goals {#sec-quality-goals}
+
+The quality goals of SRDP focus on the five systemic challenges that are typical of conventional 2-tier data architectures (where an independent data lake and data warehouse are run in parallel).
+
+::: {.list-table}
+- - Focus
+  - Challenge
+  - Requirement
+- - 1. Architectural Simplicity & Maintainability
+  - Conventional architectures require the parallel operation of separate, highly complex data lakes and proprietary data warehouses, leading to massive infrastructure complexity and high maintenance overhead.
+  - The platform **shall** consolidate storage and metadata management into a single architectural layer. It must eliminate the need to maintain distinct polyglot query engines and infrastructure silos, reducing the structural surface area for software and system failures.
+
+- - 2. Economic & Cost Efficiency
+  - Running dual systems results in high operational costs—driven by redundant compute provisioning, licensing for proprietary warehouse engines, and excessive resource consumption.
+  - The system **shall** optimize Total Cost of Ownership (TCO) by leveraging low-cost object storage for all data lifecycle stages. Compute infrastructure must be transient, scaling down to zero when not actively executing queries.
+
+- - 3. Performance Efficiency & Reduced Latency (Data Freshness)
+  - Analytical processes in 2-tier setups are inherently slow because data must wait to be extracted from the data lake, transformed, and loaded into the data warehouse before business users can query it.
+  - The end-to-end data latency (Time-to-Insight) **shall** minimize processing delay by enabling immediate query execution on data as soon as it land in the open lakehouse storage layer. The system must eliminate the need for inter-platform data staging steps.
+
+- - 4. Data Consistency & Single Source of Truth
+  - The parallel system pattern forces the redundant storage of multiple copies of the same dataset across both platforms, which inevitably causes "data drift," sync issues, and version conflicts.
+  - The architecture **shall** enforce a Single Source of Truth (SSOT). All workloads (BI, Streaming, AI) must look at the exact same physical files, ensuring data integrity, strict consistency, and identical query results regardless of the client application.
+
+- - 5. Data Trustworthiness & Governance Reliability
+  - Synchronizing data between a separate lake and warehouse requires building complex, brittle ETL/ELT pipelines. These pipelines are highly error-prone, making data lineage obscure and resulting in stale or untrustworthy metrics.
+  - The system **shall** abstract data transitions via unified table formats (such as Iceberg, Delta, or Hudi) that feature built-in time-travel, audit logs, and data versioning. Centralized security and governance policies must be enforced directly at the storage/table layer, eliminating data synchronization failure modes and maximizing compliance transparency.
+:::
+
+## Stakeholders {#sec-stakeholders}
+
+::: {.list-table}
+- - Role
+  - Expectations
+
+- - **Decisionmakers**
+  - Inform what SRDP is and isn't, such that they can they can make informed decisions about the adoption and use of SRDP in their organization.
+
+- - **Users**
+  - Provide a clear understanding of the capabilities and limitations of SRDP, enabling them to effectively utilize the platform for their data management and analytics needs.
+
+- - **Developers**
+  - Provide a clear understanding of the architecture and design of SRDP, enabling them to effectively contribute to the development and maintenance of the platform.
+
+:::

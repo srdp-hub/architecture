@@ -1,0 +1,20 @@
+# Preamble {.unnumbered}
+
+This document describes the software architecture of SRDP, the single-repo data platform aka the serendipitous data platform. The documentation is aimed at technical users and developers, and is intended to provide a clear and comprehensive overview of the architecture of SRDP, its components, and how they interact with each other. It uses the arc42 template and c4 modeling language.
+
+## About arc42
+
+arc42, the template for documentation of software and system architecture.
+
+Template Version 9.0-EN. (based upon AsciiDoc version), July 2025
+
+Created, maintained and © by Dr. Peter Hruschka, Dr. Gernot Starke and contributors. See [arc42.org](https://arc42.org).
+
+## About c4
+
+[The c4 model](https://c4model.com/) is an easy to learn, developer friendly approach to software architecture diagramming originally created by [Simon Brown](https://simonbrown.je/):
+
+- A set of hierarchical abstractions in four layers: software systems, containers, components, and code.
+- A set of hierarchical diagrams: system context, containers, components, and code.
+- An additional set of supporting diagrams: building block view, dynamic runtime view and deployment view.
+- Notation and tooling independent: this website uses [likec4.dev](https://likec4.dev/) to describe the architecture as code.
