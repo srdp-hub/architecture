@@ -1,1 +1,39 @@
-cHJvamVjdDoKICB0eXBlOiBib29rCiAgb3V0cHV0LWRpcjogX3NpdGUKCmJvb2s6CiAgdGl0bGU6ICJTUkRQIGFyY2hpdGVjdHVyZSIKICBhdXRob3I6CiAgICAtIERhbmllbCBLYXBpdGFuCiAgICAtIFlhbm5pY2sgVmlua2VzdGVpamsKICAgIC0gQW5kcmVhIEdpYXJkaW5pCiAgICAtIFRpbSBHcmV2ZWxpbmsKICAgIC0gUGlldGVyIFdqaWtzdHJhCiAgZGF0ZTogIjE0LzA2LzIwMjYiCiAgY2hhcHRlcnM6CiAgICAtIGluZGV4LnFtZAogICAgLSAwMS1pbnRyb2R1Y3Rpb24tZ29hbHMucW1kCiAgICAtIDAyLWNvbnN0cmFpbnRzLnFtZAogICAgLSAwMy1jb250ZXh0LXNjb3BlLnFtZAogICAgLSAwNC1zb2x1dGlvbi1zdHJhdGVneS5xbWQKICAgIC0gMDUtYnVpbGRpbmctYmxvY2stdmlldy5xbWQKICAgIC0gMDYtcnVudGltZS12aWV3LnFtZAogICAgLSAwNy1kZXBsb3ltZW50LXZpZXcucW1kCiAgICAtIDA4LWNyb3NzY3V0dGluZy1jb25jZXB0cy5xbWQKICAgIC0gMDktYXJjaGl0ZWN0dXJhbC1kZWNpc2lvbnMucW1kCiAgICAtIDEwLXF1YWxpdHktcmVxdWlyZW1lbnRzLnFtZAogICAgLSAxMS1yaXNrcy10ZWNobmljYWwtZGVidC5xbWQKICAgIC0gMTItZ2xvc3NhcnkucW1kCgpicmFuZDogX2JyYW5kLnltbAoKZm9ybWF0OgogIGh0bWw6CiAgICB0aGVtZToKICAgICAgLSBjb3NtbwogICAgICAtIGJyYW5kCiAgICBsYW5nOiBlbgogICAgaW5jbHVkZS1pbi1oZWFkZXI6CiAgICAgIC0gdGV4dDogfAogICAgICAgICAgPHNjcmlwdCBtb2R1bGUgc3JjPSJodHRwczovL2RvY3MucGx1Z2luLmRoZC5ubC9hcmNoaXRlY3R1dXIvYzQvbGlrZWM0LXZpZXdzLmpzIj48L3NjcmlwdD4K
+project:
+  type: book
+  output-dir: ../_site
+
+book:
+  title: "SRDP architecture"
+  author:
+    - Daniel Kapitan
+    - Yannick Vinkesteijn
+    - Andrea Giardini
+    - Tim Grevelink
+    - Pieter Wijkstra
+  date: "14/06/2026"
+  chapters:
+    - index.qmd
+    - 01-introduction-goals.qmd
+    - 02-constraints.qmd
+    - 03-context-scope.qmd
+    - 04-solution-strategy.qmd
+    - 05-building-block-view.qmd
+    - 06-runtime-view.qmd
+    - 07-deployment-view.qmd
+    - 08-crosscutting-concepts.qmd
+    - 09-architectural-decisions.qmd
+    - 10-quality-requirements.qmd
+    - 11-risks-technical-debt.qmd
+    - 12-glossary.qmd
+
+brand: _brand.yml
+
+format:
+  html:
+    theme:
+      - cosmo
+      - brand
+    lang: en
+    include-in-header:
+      - text: |
+          <script module src="https://docs.plugin.dhd.nl/architectuur/c4/likec4-views.js"></script>
