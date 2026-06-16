@@ -1,0 +1,38 @@
+project:
+  type: book
+
+book:
+  title: "SRDP architecture"
+  author:
+    - Daniel Kapitan
+    - Yannick Vinkesteijn
+    - Andrea Giardini
+    - Tim Grevelink
+    - Pieter Wijkstra
+  date: "14/06/2026"
+  chapters:
+    - index.qmd
+    - 01-introduction-goals.qmd
+    - 02-constraints.qmd
+    - 03-context-scope.qmd
+    - 04-solution-strategy.qmd
+    - 05-building-block-view.qmd
+    - 06-runtime-view.qmd
+    - 07-deployment-view.qmd
+    - 08-crosscutting-concepts.qmd
+    - 09-architectural-decisions.qmd
+    - 10-quality-requirements.qmd
+    - 11-risks-technical-debt.qmd
+    - 12-glossary.qmd
+
+brand: _brand.yml
+
+format:
+  html:
+    theme:
+      - cosmo
+      - brand
+    lang: en
+    include-in-header:
+      - text: |
+          <script module src="https://docs.plugin.dhd.nl/architectuur/c4/likec4-views.js"></script>

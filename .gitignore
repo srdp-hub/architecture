@@ -4,3 +4,8 @@ build
 test/likec4-model.ts
 relationships.csv
 react/
+
+/.quarto/
+**/*.quarto_ipynb
+arc42/_book/
+arc42/_site/
