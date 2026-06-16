@@ -9,3 +9,5 @@ react/
 **/*.quarto_ipynb
 arc42/_book/
 arc42/_site/
+
+**/.DS_Store
