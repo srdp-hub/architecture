@@ -1,1 +1,65 @@
 # Architecture Constraints {#section-architecture-constraints}
+
+
+## Zero-Trust Architecture
+
+The system must be designed under the **Zero Trust Architecture (ZTA)** paradigm, adhering to the principle of "never trust, always verify." Conceptually, ZTA overrides traditional perimeter-based security design patterns. Any architecture proposal that assumes "safe" internal network zones will be considered non-compliant with the target ZTA posture. [NIST SP 800-207](https://csrc.nist.gov/pubs/sp/800/207/final) is taken as the authoritative reference for ZTA principles and guidelines. The [NIS2 Directive](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32022L2555) is the leading legislation in Europe, in which ZTA is mandated. All architectural decisions, component interactions, and data flows must comply with the following constraints.
+
+::: {.callout-important collapse="true" title="Explicit Identity as the Perimeter"}
+* **Constraint:** No component, service, or user is granted implicit trust based on network location (e.g., being on the "internal" or "private" subnet).
+* **Requirement:** All service-to-service and user-to-service communication must be authenticated using strong, cryptographically verifiable identities (e.g., OIDC, SPIFFE/SPIRE). All requests must be accompanied by an identity token (e.g., JWT) that is validated at the service level.
+:::
+
+::: {.callout-important collapse="true" title="Least Privilege and Micro-Segmentation"}
+* **Constraint:** Access is granted based on the principle of least privilege, providing the minimum functional access necessary for a specific action.
+* **Requirement:** The system must enforce fine-grained access control at the application layer. Network-level "allow-all" firewall rules between microservices are prohibited. Communication paths must be explicitly defined and enforced, preferably through a service mesh or host-based micro-segmentation.
+:::
+
+::: {.callout-important collapse="true" title="Continuous Verification"}
+* **Constraint:** Authorization is not a "one-time" event. Access rights must be continuously re-evaluated.
+* **Requirement:** The system must support session invalidation and context-aware authorization. If a user’s risk profile changes (e.g., abnormal device behavior, failed MFA) or a service’s trust score degrades, existing sessions or requests must be terminated or re-authorized immediately.
+:::
+
+::: {.callout-important collapse="true" title="Secure Communication Everywhere"}
+* **Constraint:** The network is assumed to be compromised ("Assume Breach").
+* **Requirement:** All traffic, including internal intra-datacenter communication, must be encrypted in transit (e.g., via mTLS). The system cannot rely on cleartext protocols for any data exchange.
+:::
+
+::: {.callout-important collapse="true" title="Externalized Policy Decision Points (PDP)"}
+* **Constraint:** Authorization logic must be decoupled from business logic.
+* **Requirement:** The system must utilize centralized Policy Decision Points (e.g., Open Policy Agent) for authorization decisions. Hard-coded permission checks within business services are discouraged in favor of centralized, version-controlled policy management that can be audited and updated without redeploying application code.
+:::
+
+::: {.callout-important collapse="true" title="Observability and Auditing"}
+* **Constraint:** Full visibility into every access attempt is required to detect and respond to threats.
+* **Requirement:** Every request must be logged with the associated identity context, including who (or what service) performed the action, the resource accessed, the timestamp, and the authorization outcome. These logs must be exported to a centralized, tamper-proof security information and event management (SIEM) system.
+:::
+
+## Universal Standards, Harmonisation, and European Data Spaces
+
+To ensure long-term viability, interoperability, and legal compliance within the evolving landscape of European Data Spaces (such as Gaia-X or domain-specific data spaces), the architecture must adhere to strict standardisation constraints. Guided by the harmonization requirements outlined in the **[NIS2 Directive (EU) 2022/2555](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32022L2555)** regarding a high common level of cybersecurity and standardization, the system must act as a responsible, federated participant. The overarching goal of these constraints is to prevent vendor lock-in and ensure that the software system can seamlessly participate in a decentralized, federated European digital economy. Adherence to open standards is not just a technical preference, but a legal and strategic necessity. Adherence to W3C and *de facto* standards is a mandatory Day-1 requirement. The other constraints in this section are designed to ensure that the system can evolve alongside the European Data Space ecosystem without requiring disruptive rewrites or migrations.
+
+::: {.callout-important collapse="true" title="Mandatory Application of W3C Standards and open formats"}
+* **Constraint:** Proprietary data formats and centralized identity silos are strictly prohibited for cross-domain data exchange. The system must natively use open Web standards.
+* **Requirement:** From initial deployment, the architecture must implement W3C standards to ensure foundational interoperability. This includes using **W3C Decentralized Identifiers (DIDs)** and **Verifiable Credentials (VCs)** for federated identity and trust, as well as semantic web standards (such as **JSON-LD, RDF**) for data modeling and metadata exchange.This also includes *de facto* standards such as the Apache Arrow ecosystem of open data formats (Parquet, Iceberg).
+:::
+
+::: {.callout-warning collapse="true" title="NIS2 Cybersecurity and Harmonisation Alignment"}
+* **Constraint:** The system must comply with the harmonized cybersecurity risk-management measures and reporting obligations mandated by the NIS2 Directive.
+* **Requirement:** The architecture must implement state-of-the-art cryptography, secure communication, and incident management capabilities relying on internationally and legally accepted standards (e.g., ISO/IEC 27000 series). It must support standardized interfaces for incident reporting and supply chain security auditing as prescribed by national authorities and ENISA.
+:::
+
+::: {.callout-warning collapse="true" title="Protocol Agility and Evolvable Architecture"}
+* **Constraint:** The technology landscape for European Data Spaces is actively evolving. The system cannot be tightly coupled to today’s specific transport protocols or trust frameworks.
+* **Requirement:** The architecture must enforce strict separation of concerns (e.g., using a Hexagonal or Ports and Adapters architecture) to decouple business logic from communication protocols. While W3C standards are the day-one baseline, the system must be extensible to integrate future protocols (e.g., evolving IDSA - International Data Spaces Association specifications, Gaia-X Trust Framework updates, or Eclipse Dataspace Components) without requiring a core system rewrite.
+:::
+
+::: {.callout-warning collapse="true" title="Data Sovereignty and Interoperability"}
+* **Constraint:** Within European Data Spaces, data owners must retain full control over their data (Data Sovereignty). Data cannot be locked into platform-specific vendor ecosystems.
+* **Requirement:** The architecture must support distributed data storage and federated data exchange. It must implement standardized policy negotiation and usage control mechanisms (e.g., W3C ODRL - Open Digital Rights Language) to mathematically and technically enforce the data usage policies set by the data owner before any data transfer occurs.
+:::
+
+::: {.callout-warning collapse="true" title="Open API and Standardized Integration"}
+* **Constraint:** System interfaces designed for external integration must be fully documented, standard-compliant, and vendor-neutral.
+* **Requirement:** All external APIs must be defined using the OpenAPI Specification (OAS) or AsyncAPI. They must utilize standard HTTP methods, status codes, and harmonized payload structures to facilitate frictionless integration with future European digital infrastructure nodes.
+:::
