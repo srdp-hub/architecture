@@ -36,4 +36,4 @@ format:
     lang: en
     include-in-header:
       - text: |
-          <script module src="https://docs.plugin.dhd.nl/architectuur/c4/likec4-views.js"></script>
+          <script module src="https://srdphub.com/architecture/c4/likec4-views.js"></script>
