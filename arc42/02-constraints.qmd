@@ -63,3 +63,57 @@ To ensure long-term viability, interoperability, and legal compliance within the
 * **Constraint:** System interfaces designed for external integration must be fully documented, standard-compliant, and vendor-neutral.
 * **Requirement:** All external APIs must be defined using the OpenAPI Specification (OAS) or AsyncAPI. They must utilize standard HTTP methods, status codes, and harmonized payload structures to facilitate frictionless integration with future European digital infrastructure nodes.
 :::
+
+## Non-functional requirements
+
+Reliability, scalability and maintainability are the three architectural pillars that dictate the system's runtime stability and long-term viability. These pillars are defined as follows, following Kleppmann and Riccomini ([2026](https://www.oreilly.com/library/view/designing-data-intensive-applications/9781098119058/)):
+
+:::{.list-table}
+
+- - Pillar
+  - Description
+  - Design focus & mitigation Strategies
+
+- - **Reliability**
+  - Continuing to function correctly and meeting performance goals even when components face faults.
+  - Introducing fault tolerance via component redundancy, localized failure containment, and robust error handling.
+
+- - **Scalability**
+  - The system's capacity to maintain acceptable performance when load parameters increase.
+  - Tracking throughput or data volume metrics and choosing optimal horizontal or vertical scaling structures.
+
+- - **Maintainability**
+  - Designing the architecture to optimize life-cycle costs and minimize developer friction over time.
+  - Emphasizing operational simplicity, clean system abstractions, and decoupled, evolvable components.
+:::
+
+### Reliability
+
+A reliable system must actively prevent component-level *faults* from escalating into total system *failures*. The SRDP architecture must account for three distinct categories of faults:
+
+- **Hardware Faults**: Physical components like hard drives, solid-state drives, RAM, and CPU cores inevitably encounter uncorrectable bit errors, defects, or complete failures over time. The system must utilize hardware redundancy or software-level abstractions to tolerate the loss of individual nodes or entire availability zones.
+- **Software Faults**: Unlike mostly independent hardware glitches, software bugs—such as runaway processes, API misbehaviors, or cascading failures—introduce highly correlated faults across multiple nodes concurrently. The architecture must implement rigid process isolation, bound resource limits, and avoid catastrophic feedback loops like retry storms.
+- **Human Errors**: System configuration errors by operators are a leading cause of production outages. The system must protect its integrity by providing well-designed interfaces that discourage invalid inputs, thorough testing suites, fast rollback tools, and a cultural embrace of blameless postmortems.
+
+:::{.callout-note title="Reliability testing"}
+To ensure fault-tolerance mechanisms are operational, the system should leverage fault injection or chaos engineering practices to deliberately trigger component failures in a controlled manner.
+:::
+
+
+### Scalability
+
+Scalability is not a fixed designation; rather, it describes how effectively an architecture handles growth along specific load dimensions.
+
+- **Quantifying Load**: Schedulers and components must be tuned against explicitly defined load parameters, such as request throughput, read-to-write ratios, data volumes, or cache hit rates.
+- **Describing Performance**: When load increases, performance must be evaluated using scannable metrics. Rather than relying on misleading averages, the system must utilize client-side response time percentiles—specifically $p50$ for typical latency and $p95$, $p99$, or $p99.9$ to closely monitor tail latencies that impact high-value users.
+- **Scaling Architecture**: Where vertical scaling (scaling up to a larger machine) incurs exponentially higher hardware costs and hard architectural ceilings, horizontal scaling (scaling out via a shared-nothing cluster) provides linear scalability. The system should favor breaking workloads down into smaller, decoupled components that can scale independently across cheap commodity instances.
+
+
+
+### Maintainability
+
+Because the majority of an application's life-cycle cost goes toward ongoing maintenance rather than initial construction, the architecture must actively minimize technical debt.
+
+- **Operability**: The platform must make life easy for operations teams by exposing clear, predictable operational behaviors, supporting metrics collection, and enabling rolling upgrades to execute patches node-by-node without user-facing downtime.
+- **Simplicity**: To prevent the architecture from degenerating into an unmanageable "big ball of mud," complexity must be strictly managed. The system should hide intricate data patterns and concurrency issues behind clean, robust abstractions.
+- **Evolvability**: Assuming that system requirements are in a constant state of flux, components must be loosely coupled. Building on strong abstractions allows engineers to confidently adjust, reprocess, or expand the data infrastructure to satisfy entirely unanticipated business use cases without compromising stability.
