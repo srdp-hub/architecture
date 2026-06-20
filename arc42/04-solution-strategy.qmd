@@ -1,1 +1,36 @@
 # Solution Strategy {#section-solution-strategy}
+
+SRDP relies on two mandatory foundational components to achieve declarative, low-complexity data management: **Dagster** for asset-oriented orchestration and **DuckLake** for relational lakehouse storage.
+
+## Asset-oriented orchestration through software-defined assets
+
+SRDP rejects traditional task-oriented scheduling in favor of asset-oriented orchestration based on the paradigm of **Software-Defined Assets (SDAs)**. An SDA is a declarative description in code of a desired physical data object, encompassing its upstream data lineage and its transformation logic.
+
+The implementation of SDAs provides four core capabilities:
+
+1. **Declarative Workflow Definition:** Developers define the target state of the data asset rather than stitching tasks together. The orchestrator resolves data freshness requirements via state reconciliation, computing the exact execution path based on upstream changes.
+2. **Explicit Lineage:** Data dependencies are captured pre-runtime directly within the code repository. Lineage becomes a native artifact of the development cycle rather than an external documentation effort.
+3. **Environment Agnosticism:** The logical definition of the asset remains decoupled from the physical compute environment. The same pipeline logic runs locally using lightweight compute or moves unchanged to cluster-based production infrastructure.
+4. **Data Product and Contract Enforcement:** SDAs act as the technical implementation layer for Data Products. They translate abstract data contracts into executable code through *Asset Checks*. The orchestrator executes schema validations and quality constraints immediately after asset materialization, blocking corrupt data from advancing down the Medallion pipeline (Source to Silver to Gold zones).
+
+**Dagster** is the mandatory orchestrator chosen for SRDP to execute this paradigm. It controls the logical domain, defining *what* data assets exist, *how* they relate, and *when* they must be refreshed or validated. It provides the native runtime engine, dependency graphing, state tracking, and asset check APIs required to manage the repository's lifecycle. In addition, Dagster has a rich ecosystems with various integrations and allows creation of own boundary resources such as IO-managers and integration of the OpenLineage metadata standard. Dagster is licensed under Apache 2.0.
+
+## DuckLake as the lightweight lakehouse core
+
+To persist and query these software-defined assets, SRDP incorporates **DuckLake** as its second core component. DuckLake provides an integrated data lake and catalog format designed to eliminate the operational complexity of traditional enterprise lakehouse stacks. It controls the physical and transactional domain, defining *where* the assets reside, *how* concurrent writes are isolated, and providing the SQL-native catalog interface for external clients.
+
+DuckLake structures the storage layer using a dual-tier approach:
+
+* **Catalog Layer:** Utilizes an ACID-compliant SQL database (such as PostgreSQL or SQLite) to manage table metadata and transaction states.
+* **Storage Layer:** Stores analytical datasets as standard Parquet files on S3-compliant object storage.
+
+By combining a relational metadata catalog with object storage, DuckLake provides multi-table ACID transactions, snapshots, time-travel queries, schema evolution, and predicate pushdown. It establishes a "multiplayer DuckDB" pattern, enabling concurrent, independent data science tooling and local analytical clients to read from and write to shared cloud data assets safely without resource contention or consistency anomalies. In future, use of the Quack protocol as a DuckDB native client-server interface allows further extension of the DuckLake core.
+
+## Observability with OpenLineage and OpenTelemetry
+
+...
+
+## Python data stack
+
+polars - pydantic - FastAPI for controlled data processing with as much automation as possible
+Python-based app development frameworks: Streamlit, Shiny for Python, plotly

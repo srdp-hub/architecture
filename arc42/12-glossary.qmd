@@ -3,9 +3,12 @@
 ::: {.list-table}
 - - Term
   - Explanation
-
+- - IdP
+  - Identity Provider
 - - OSS
   - Open Source Software
+- - SDA
+  - Software-Defined Asset
 
 
 :::

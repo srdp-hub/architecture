@@ -2,7 +2,14 @@
 
 ## Whitebox Overall System {#_whitebox_overall_system}
 
-***\<Overview Diagram\>***
+```{=html}
+<likec4-view
+   view-id="index"
+   browser="true"
+   dynamic-variant="sequence">
+</likec4-view>
+```
+
 
 Motivation
 
