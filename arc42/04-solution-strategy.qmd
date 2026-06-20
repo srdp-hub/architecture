@@ -24,7 +24,7 @@ DuckLake structures the storage layer using a dual-tier approach:
 * **Catalog Layer:** Utilizes an ACID-compliant SQL database (such as PostgreSQL or SQLite) to manage table metadata and transaction states.
 * **Storage Layer:** Stores analytical datasets as standard Parquet files on S3-compliant object storage.
 
-By combining a relational metadata catalog with object storage, DuckLake provides multi-table ACID transactions, snapshots, time-travel queries, schema evolution, and predicate pushdown. It establishes a "multiplayer DuckDB" pattern, enabling concurrent, independent data science tooling and local analytical clients to read from and write to shared cloud data assets safely without resource contention or consistency anomalies. In future, use of the Quack protocol as a DuckDB native client-server interface allows further extension of the DuckLake core.
+By combining a relational metadata catalog with object storage, DuckLake provides multi-table ACID transactions, snapshots, time-travel queries, schema evolution, and predicate pushdown. It establishes a "multiplayer DuckDB" pattern, enabling concurrent, independent data science tooling and local analytical clients to read from and write to shared cloud data assets safely without resource contention or consistency anomalies. In future, use of the Quack protocol as a DuckDB native client-server interface allows further extension of the DuckLake core. DuckLake is an [open specification](https://ducklake.select/docs/stable/specification/introduction), the duckdb DuckLake extension is MIT licensed.
 
 ## Observability with OpenLineage and OpenTelemetry
 
