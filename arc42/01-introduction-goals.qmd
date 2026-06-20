@@ -76,14 +76,12 @@ The quality goals of SRDP focus on the five systemic challenges that are typical
 ::: {.list-table}
 - - Role
   - Expectations
-
 - - **Decisionmakers**
   - Inform what SRDP is and isn't, such that they can they can make informed decisions about the adoption and use of SRDP in their organization.
-
 - - **Users**
   - Provide a clear understanding of the capabilities and limitations of SRDP, enabling them to effectively utilize the platform for their data management and analytics needs.
-
 - - **Developers**
   - Provide a clear understanding of the architecture and design of SRDP, enabling them to effectively contribute to the development and maintenance of the platform.
-
+- - **Service Providers**
+  - Provide cloud hosting services and/or managed services using the SRDP architecture. We aim to provide a mechanism for conformance testing and certification to support an ecosystem of partners.
 :::
