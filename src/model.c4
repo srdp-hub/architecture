@@ -1,134 +1,161 @@
 model {
 
-  engineer = actor 'Data/AI Engineer' {
+  developer = actor 'Data/AI Engineer' {
     description 'Develops and monitors data pipelines'
-    -> srdp.orchestrator 'develops, monitors and runs data pipelines'
-    -> observability.data-lineage 'receives lineage metadata in'
   }
 
   consumer = actor 'Data/AI Consumer' {
     description 'Consumes data products, dashboards and machine learning models for decision making.'
   }
 
+  provider = actor 'Service Provider' {
+    description 'Provides SRDP as a managed platform and/or service'
+  }
+
   sources = external-system 'Data Sources' {
     description 'External data sources from which data is ingested onto the platform.'
   }
 
-  srdp = system 'SRDP Core' {
-    description 'An integrated lakehouse data platform that leverages open storage types, data formats and data processing pipelines for reporting, analytics, and machine learning, as well as streaming workloads.'
+  srdp = system 'SRDP' {
+    description 'A sovereign data platform based on an opinionated configuration of open standards and open source components.'
 
-    lakehouse = system 'Lakehouse' {
-      description 'A data storage architecture that combines the benefits of data lakes and data warehouses, providing a unified platform for storing and analyzing structured and unstructured data.'
-      link https://doi.org/10.1007/s42979-024-02737-0 'Overview paper.'
+    core = system 'SRDP Core' {
+      description 'An integrated lakehouse data platform that leverages open storage types, data formats and data processing pipelines for reporting, analytics, and machine learning, as well as streaming workloads.'
 
-      ducklake = system 'DuckLake' {
-        description 'A lakehouse format built on SQL.'
-        link https://ducklake.select
+      lakehouse = system 'Lakehouse' {
+        description 'A data storage architecture that combines the benefits of data lakes and data warehouses, providing a unified platform for storing and analyzing structured and unstructured data.'
+        link https://doi.org/10.1007/s42979-024-02737-0 'Overview paper.'
 
-        storage = container 'Storage' {
-          description 'S3 compatible, scalable and cost-effective storage for storing large volumes of data in its open file formats.'
+        ducklake = system 'DuckLake' {
+          description 'A lakehouse format built on SQL.'
+          link https://ducklake.select
+
+          storage = container 'Storage' {
+            description 'S3 compatible, scalable and cost-effective storage for storing large volumes of data in its open file formats.'
+          }
+
+          catalog = container 'Catalog' {
+            description 'An open table format that maintains an inventory of structured data assets, their schemas, and their relationships.'
+            -> storage 'manages metadata and data files in'
+          }
         }
 
-        catalog = container 'Catalog' {
-          description 'An open table format that maintains an inventory of structured data assets, their schemas, and their relationships.'
-          -> storage 'manages metadata and data files in'
+        compute = container 'Compute' {
+          description 'An empheral computing instance (client) which which queries and data processing logica can be applied to the data.'
+        }
+
+        compute -> ducklake 'queries and processes data in'
+      }
+
+      orchestrator = system 'Workflow Orchestrator' {
+        description 'Manages and schedules data pipelines, ensuring that data processing tasks are executed in the correct order and at the right time.'
+        link https://docs.dagster.io/ 'Dagster as preferred open source workflow orchestrator.'
+
+        code-location = component 'Code Location' {
+          description 'Collection of entity definitions (assets, jobs etc.) deployed in a specific environment'
+
+          asset = component 'Asset' {
+            description 'An asset represents a logical unit of data such as a table, dataset, or machine learning model. Assets can have dependencies on other assets, forming the data lineage for your pipelines.'
+          }
+
+          job = component 'Job' {
+            description 'A job code that needs to be executed on data. It takes takes assets as input and produces assets as output'
+          }
+        }
+
+        ui = container 'Web UI' {
+          description 'Provides a user interface for monitoring and managing data pipelines, allowing users to visualize the status of their workflows and troubleshoot any issues that arise.'
+          -> deamon 'manually trigger'
+          -> code-location 'visualize'
+        }
+
+        deamon = container 'Deamon' {
+          description 'long-running process for creating job runs'
+          -> code-location 'manages runs from'
         }
       }
 
-      compute = container 'Compute' {
-        description 'An empheral computing instance (client) which which queries and data processing logica can be applied to the data.'
-      }
-
-      compute -> ducklake 'queries and processes data in'
     }
 
-    orchestrator = system 'Workflow Orchestrator' {
-      description 'Manages and schedules data pipelines, ensuring that data processing tasks are executed in the correct order and at the right time.'
-      link https://docs.dagster.io/ 'Dagster as preferred open source workflow orchestrator.'
+    observability = system 'Observability' {
+      description 'Provides monitoring, logging, and alerting capabilities to ensure the health and performance of the data platform.'
+      link https://opentelemetry.io/ 'OpenTelemetry as preferred open source observability framework.'
 
-      code-location = component 'Code Location' {
-        description 'Collection of entity definitions (assets, jobs etc.) deployed in a specific environment'
+      data-lineage = system 'Data Lineage' {
+        description 'Tracks the flow of data through the platform, providing visibility into data transformations, dependencies, and the origin of data assets, using the OpenLineage standard.'
+        link https://openlineage.io/ 'OpenLineage specification.'
+        link https://marquezproject.ai/ 'Marquez as preferred open source implementation of OpenLineage.'
+        -> srdp.core 'receives lineage metadata from'
 
-        asset = component 'Asset' {
-          description 'An asset represents a logical unit of data such as a table, dataset, or machine learning model. Assets can have dependencies on other assets, forming the data lineage for your pipelines.'
+        ui = container 'Web UI' {
+          description 'Provides a user interface for visualizing data lineage, allowing users to understand the flow of data and its transformations across the platform.'
+          link https://github.com/MarquezProject/marquez/tree/main/web 'source code'
+          link https://hub.docker.com/r/marquezproject/marquez-web 'Docker image'
         }
 
-        job = component 'Job' {
-          description 'A job code that needs to be executed on data. It takes takes assets as input and produces assets as output'
+        api = container 'REST API' {
+          description 'Provides an API for programmatically accessing lineage metadata, enabling integration with other tools and systems.'
+          link https://github.com/MarquezProject/marquez/tree/main/api 'source code'
+          link https://hub.docker.com/r/marquezproject/marquez 'Docker image'
         }
       }
 
-      ui = container 'Web UI' {
-        description 'Provides a user interface for monitoring and managing data pipelines, allowing users to visualize the status of their workflows and troubleshoot any issues that arise.'
+      telemetry = container 'Telemetry' {
+        description 'Collects and manages logs from various components of the data platform, providing insights into system behavior and aiding in troubleshooting.'
+        link https://opentelemetry.io/docs/specs/otlp/ 'OpenTelemetry Protocol as the mandatory standard for monitoring'
+        link https://prometheus.io/docs/introduction/overview/ 'Prometheus as preferred open source monitoring solution.'
+
+        -> core 'monitors'
+        -> data-lineage 'monitors'
+        -> services 'monitors'
+        -> security 'monitors'
+      }
+    }
+
+    services = system 'Services' {
+      description 'Apps & services through which data products, dashboards and apps can be consumed.'
+
+      api = container 'API' {
+        description 'Provides openAPI-based read-access to the core data platform.'
+        link https://swagger.io/specification/ 'OpenAPI specification.'
+        link https://fastapi.tiangolo.com/ 'FastAPI as preferred open source framework for building APIs.'
+
       }
 
+      apps = container 'Apps' {
+        description 'Applications that provide user interfaces for consuming data products, dashboards, and machine learning models.'
+        link https://shiny.posit.co/py/docs/overview.html 'Shiny for Python as recommended open source framework for building data apps.'
+        link https://streamlit.io/ 'Streamlit as recommended open source framework for building data apps.'
+      }
+      -> core.lakehouse 'exposes data for consumption from'
+    }
+
+    security = system 'Security' {
+      description 'Ensures the security and compliance of the data platform, implementing access controls, encryption, and auditing mechanisms to protect sensitive data and maintain regulatory compliance.'
+
+      proxy = container 'Proxy' {
+        description 'A reverse proxy that provides a single entry point for accessing the various components of the data platform, enforcing security policies and access controls.'
+        link https://traefik.io/traefik 'Traefik as preferred open source reverse proxy solution.'
+      }
+
+      idp = container 'Identity Provider' {
+        description 'An identity provider that manages user authentication and authorization, integrating with the platform\'s access control mechanisms to ensure secure access to data and services.'
+        link https://zitadel.com/docs 'Zitadel as preferred open source identity provider solution.'
+      }
+
+      -> core 'secures'
+      -> services 'secures'
+      -> observability 'secures'
 
     }
   }
-
-  observability = system 'Observability' {
-    description 'Provides monitoring, logging, and alerting capabilities to ensure the health and performance of the data platform.'
-    link https://opentelemetry.io/ 'OpenTelemetry as preferred open source observability framework.'
-
-    data-lineage = system 'Data Lineage' {
-      description 'Tracks the flow of data through the platform, providing visibility into data transformations, dependencies, and the origin of data assets, using the OpenLineage standard.'
-      link https://openlineage.io/ 'OpenLineage specification.'
-      link https://marquezproject.ai/ 'Marquez as preferred open source implementation of OpenLineage.'
-      -> orchestrator 'receives lineage metadata from'
-      -> lakehouse 'receives lineage metadata from'
-
-      ui = container 'Web UI' {
-        description 'Provides a user interface for visualizing data lineage, allowing users to understand the flow of data and its transformations across the platform.'
-        link https://github.com/MarquezProject/marquez/tree/main/web 'source code'
-        link https://hub.docker.com/r/marquezproject/marquez-web 'Docker image'
-      }
-
-      api = container 'REST API' {
-        description 'Provides an API for programmatically accessing lineage metadata, enabling integration with other tools and systems.'
-        link https://github.com/MarquezProject/marquez/tree/main/api 'source code'
-        link https://hub.docker.com/r/marquezproject/marquez 'Docker image'
-      }
-    }
-
-    monitoring = container 'Monitoring' {
-      description 'Collects and manages logs from various components of the data platform, providing insights into system behavior and aiding in troubleshooting.'
-      link https://prometheus.io/ 'Prometheus as preferred open source monitoring solution.'
-    }
-  }
-
-  services = system 'Services' {
-    description 'Apps & services through which data products, dashboards and apps can be consumed.'
-
-    api = container 'API' {
-      description 'Provides openAPI-based read-access to the core data platform.'
-      link https://swagger.io/specification/ 'OpenAPI specification.'
-      link https://fastapi.tiangolo.com/ 'FastAPI as preferred open source framework for building APIs.'
-    }
-
-    apps = container 'Apps' {
-      description 'Applications that provide user interfaces for consuming data products, dashboards, and machine learning models.'
-      link https://shiny.posit.co/py/docs/overview.html 'Shiny for Python as recommended open source framework for building data apps.'
-      link https://streamlit.io/ 'Streamlit as recommended open source framework for building data apps.'
-    }
-  }
-
-  security = system 'Security' {
-    description 'Ensures the security and compliance of the data platform, implementing access controls, encryption, and auditing mechanisms to protect sensitive data and maintain regulatory compliance.'
-
-    proxy = container 'Proxy' {
-      description 'A reverse proxy that provides a single entry point for accessing the various components of the data platform, enforcing security policies and access controls.'
-      link https://traefik.io/traefik 'Traefik as preferred open source reverse proxy solution.'
-    }
-
-    idp = container 'Identity Provider' {
-      description 'An identity provider that manages user authentication and authorization, integrating with the platform\'s access control mechanisms to ensure secure access to data and services.'
-      link https://zitadel.com/docs 'Zitadel as preferred open source identity provider solution.'
-    }
-  }
-  engineer -> srdp 'develops pipelines, monitors runs'
+  developer -> srdp.core 'develops pipelines, monitors runs'
   consumer -> services 'consumes data products, dashboards'
-  sources -> srdp 'source of data for'
+  provider -> srdp 'provides managed services for'
 
-  orchestrator.asset -> srdp.lakehouse 'persisted/materialized on'
+  //sources -> srdp 'source of data for'
+
+
+  orchestrator.asset -> srdp.core.lakehouse 'persisted/materialized on'
 
 }

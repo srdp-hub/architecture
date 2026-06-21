@@ -2,11 +2,12 @@ views {
 
   view index {
     title 'SRDP overview'
-    include srdp.*, srdp.orchestrator.*, srdp.orchestrator.code-location.*, srdp.lakehouse.*, srdp.ducklake.*, observability.*, observability.data-lineage.*, services, services.*, security, security.*
+    include srdp, srdp.*, srdp.orchestrator, srdp.orchestrator.*, srdp.lakehouse.*, srdp.ducklake.*, srdp.observability.*, srdp.observability.data-lineage.*, srdp.services, srdp.services.*, srdp.security, srdp.security.*
+    autoLayout BottomTop
   }
   view srdp {
-    title 'SRDP sub-systems'
-    include srdp.*, srdp.lakehouse.*, engineer, consumer
+    title 'SRDP business context'
+    include srdp, srdp.core.*, srdp.services, srdp.services.*, developer, consumer, provider
 
   }
   view of srdp.lakehouse {
