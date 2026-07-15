@@ -9,6 +9,8 @@
   - Open Source Software
 - - SDA
   - Software-Defined Asset
+- - RDBMS
+  - Relational Database Management System
 
 
 :::

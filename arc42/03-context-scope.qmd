@@ -6,7 +6,7 @@ SRDP is designed as a sovereign data platform that can serve as an organization-
 
 ### Composability through open software components and well-defined boundary resources
 
-Modularity is a tried-and-true practice of software engineering, which for SRDP is translated into the concept of the composable data stack (Pedreira et al (2023)[https://www.vldb.org/pvldb/vol16/p2679-pedreira.pdf):
+Modularity is a tried-and-true practice of software engineering, which for SRDP is translated into the concept of the composable data stack ([Pedreira et al (2023)](https://www.vldb.org/pvldb/vol16/p2679-pedreira.pdf)):
 
 > ... by decomposing (the core data platform) into a modular stack of reusable components, development can be streamlined while creating a more consistent
 experience for users. Towards that goal, we describe the state-of-the-art, principal open source technologies ...
@@ -52,7 +52,13 @@ To allow service providers to offer services based on the SRDP architecture, the
 
 The operational boundaries separating platform developers, end-users, and the processing core of SRDP are managed explicitly through boundary resources to ensure architectural stability.
 
-TO DO: insert main C4 diagram here
+```{=html}
+<likec4-view
+   view-id="srdp"
+   browser="true"
+   dynamic-variant="sequence">
+</likec4-view>
+```
 
 ## Technical Context {#_technical_context}
 
@@ -64,6 +70,7 @@ SRDP utilizes a portable, cloud-agnostic infrastructure footprint:
 
 - **Kubernetes Container Infrastructure:** Orchestrates platform microservices, enforces compute resource isolation, and manages internal container networking.
 - **S3-Compliant Blob Storage:** Serves as the primary persistence layer for the data lakehouse. Compute engines read and write data assets directly using open file standards.
+- **Relational database management system (RDBMS):** Serves as the primary component for storing the state of various components.
 
 ### Technical boundaries and interfaces
 

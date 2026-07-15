@@ -5,6 +5,11 @@ views {
     include srdp, srdp.*, srdp.orchestrator, srdp.orchestrator.*, srdp.lakehouse.*, srdp.ducklake.*, srdp.observability.*, srdp.observability.data-lineage.*, srdp.services, srdp.services.*, srdp.security, srdp.security.*
     autoLayout BottomTop
   }
+  view simplified {
+    title 'SRDP simplified overview'
+    include srdp, srdp.orchestrator, srdp.lakehouse.*, srdp.ducklake.*, srdp.observability.data-lineage, , srdp.observability.data-lineage.*, srdp.services, srdp.services.*
+    autoLayout BottomTop
+  }
   view srdp {
     title 'SRDP business context'
     include srdp, srdp.core.*, srdp.services, srdp.services.*, developer, consumer, provider
