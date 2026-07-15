@@ -4,7 +4,7 @@ SRDP relies on two mandatory foundational components to achieve declarative, low
 
 ## Asset-oriented orchestration through software-defined assets
 
-SRDP rejects traditional task-oriented scheduling in favor of asset-oriented orchestration based on the paradigm of **Software-Defined Assets (SDAs)**. An SDA is a declarative description in code of a desired physical data object, encompassing its upstream data lineage and its transformation logic.
+SRDP rejects traditional task-oriented scheduling in favor of asset-oriented orchestration based on the paradigm of **Software-Defined Assets (SDAs)**. A SDA is a declarative description in code of a desired physical data object, encompassing its upstream data lineage and its transformation logic.
 
 The implementation of SDAs provides four core capabilities:
 
@@ -32,5 +32,14 @@ By combining a relational metadata catalog with object storage, DuckLake provide
 
 ## Python data stack
 
-polars - pydantic - FastAPI for controlled data processing with as much automation as possible
-Python-based app development frameworks: Streamlit, Shiny for Python, plotly
+For controlled **data processing** with as much automation as possible:
+- duckdb
+- polars
+- pydantic
+- FastAPI
+
+Python-based app development frameworks:
+- Streamlit
+- Shiny for Python
+- plotly
+- marimo
