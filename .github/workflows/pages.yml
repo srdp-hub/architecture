@@ -82,6 +82,27 @@ jobs:
             --base "${BASE}/c4" \
             --output _site/c4
 
+      # GitHub Pages only serves /404.html at the site root for unknown paths.
+      # LikeC4 is an SPA with browser-history routes (e.g. /c4/view/index/), so
+      # deep links hit GitHub's default 404 unless we provide a fallback that
+      # loads the SPA. We copy the SPA entry point to the site root and add a
+      # guard that redirects non-C4 404s back to the site homepage.
+      - name: Add SPA fallback 404
+        run: |
+          cp _site/c4/index.html _site/404.html
+          node - <<'NODE'
+          const fs = require('fs');
+          const base = (process.env.BASE || '/').replace(/\/+$/, '') || '/';
+          const c4Base = base === '/' ? '/c4' : `${base}/c4`;
+          const home = base === '/' ? '/' : `${base}/`;
+          const guard = `<script>(function(){const p=location.pathname;const b='${c4Base}';if(p!==b&&!p.startsWith(b+'/')){location.replace('${home}');}})();</script>`;
+          let html = fs.readFileSync('_site/404.html', 'utf8');
+          html = html.replace(/<meta charset="utf-8" \/>/i, '$&\n  ' + guard);
+          fs.writeFileSync('_site/404.html', html);
+          NODE
+        env:
+          BASE: ${{ steps.pages.outputs.base_path || '/' }}
+
       # ── Upload combined artifact ─────────────────────────────────────────────
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
