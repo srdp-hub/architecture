@@ -1,0 +1,85 @@
+deployment {
+  intermax = zone 'Intermax' {
+    description 'hosting provider'
+
+    security-vm = vm 'Virtual machine for ZTA' {
+      zitadel = instanceOf srdp.security.idp 'Zitadel'
+      traefik = instanceOf srdp.security.reverse-proxy 'Traefik'
+      oauth2-proxy = instanceOf srdp.security.forward-auth 'Oauth2 Proxy'
+    }
+
+    postgresql = db {
+      icon https://icons.terrastruct.com/dev%2Fpostgresql.svg
+      ducklake-catalog = db-namespace 'DuckLake catalog' {
+        instanceOf srdp.core.ducklake.catalog
+      }
+      dagster-db = db-namespace 'Dagster metadata'
+      zitadel-db = db-namespace 'Zitadel backend'
+    }
+
+    shared-s3 = s3 'Shared s3 storage for large media files'
+
+    shared = kubernetes {
+      ubiops = environment {
+        sein-omop-dev = project {
+          default-storage = s3 'default storage' {
+            description 'Default s3 storage of project.'
+            ducklake-storage = instanceOf srdp.core.lakehouse.storage 'DuckLake storage'
+          }
+          dagster = deployment 'Dagster' {
+            dagster-ui = instanceOf srdp.core.orchestrator.ui 'Dagster webserver'
+            dagster-daemon = instanceOf srdp.core.orchestrator.daemon 'Dagster daemon'
+            -> compute 'executes jobs on'
+          }
+          compute = deployment 'ephemeral compute' {
+            description 'UbiOps deployment for running compute jobs.'
+            dagster-executor = instanceOf srdp.core.lakehouse.compute
+            -> ducklake-catalog 'reads and writes via'
+          }
+          medication-dashboard = deployment 'Medication dashboard' {
+            instanceOf srdp.services.apps
+          }
+          qol-dashboard = deployment 'QoL dashboard' {
+            instanceOf srdp.services.apps
+          }
+          patient-timeline = deployment 'Patient timeline dashboard' {
+            instanceOf srdp.services.apps
+          }
+
+          -> shared-s3 'reads and write on'
+        }
+        another-project = project {
+          default-storage = s3 'default storage'
+          another-app = deployment 'Another app' {
+            instanceOf srdp.services.apps
+          }
+          -> shared-s3 'reads and write on'
+        }
+      }
+    }
+
+    hix = db 'HiX logship replica'
+    shared.ubiops.sein-omop-dev -> hix 'reads from'
+
+
+
+    security-vm -> shared.ubiops 'provides ZTA for'
+    zitadel -> postgresql.zitadel-db 'stores data in'
+    shared.ubiops.sein-omop-dev.dagster -> postgresql.dagster-db 'stores metadata in'
+    shared.ubiops.sein-omop-dev.ducklake-storage -> postgresql.ducklake-catalog 'stores catalog data in'
+  }
+
+  github = github {
+    sein-omop = instanceOf srdp.core.orchestrator.code-location 'SEIN-OMOP codebase'
+  }
+
+  laptop = laptop 'Developer\'s laptop' {
+    vs-code = instanceOf ide
+  }
+
+  laptop -> github 'GitHub workflow in'
+  laptop -> traefik 'obtains access through'
+  laptop.vs-code -> shared.ubiops.sein-omop-dev.dagster 'runs devcontainer on'
+
+
+}

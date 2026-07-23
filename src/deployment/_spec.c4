@@ -1,0 +1,65 @@
+specification {
+
+  // https://brand.mozilla.com/document/267#/visual-identity/color
+  color foundation-orange #F06C12
+  color foundation-yellow #EED800
+  color foundation-green #20C376
+  color foundation-blue #23A5E9
+  color mozilla-black #161616
+
+  deploymentNode internet
+  deploymentNode vm
+  deploymentNode db {
+    style {
+      shape storage
+    }
+  }
+  deploymentNode db-namespace {
+    style {
+      color foundation-blue
+      shape storage
+    }
+  }
+  deploymentNode kubernetes {
+    style {
+      color foundation-blue
+      icon tech:kubernetes
+      multiple true
+    }
+  }
+  deploymentNode s3 {
+    title 's3-compliant blob storage'
+    style {
+      color foundation-blue
+      shape bucket
+      size small
+
+    }
+  }
+  deploymentNode laptop {
+    style {
+      color gray
+      shape browser
+    }
+  }
+  deploymentNode zone
+  deploymentNode environment
+  deploymentNode project {
+    description 'Project in UbiOps provides abstraction layer for virtual partioning of deployments, services and storage.'
+  }
+  deploymentNode deployment {
+    description 'Deployments are objects within UbiOps that serve your code to process data.'
+    link https://ubiops.com/docs/deployments/ 'UbiOps documentation'
+  }
+
+  deploymentNode service {
+    description 'Services let you expose your deployments through custom HTTP endpoints on UbiOps.'
+    link https://ubiops.com/docs/services/ 'UbiOps documentation'
+  }
+  deploymentNode github {
+    title 'GitHub'
+    style {
+      icon tech:github
+    }
+  }
+}
