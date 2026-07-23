@@ -65,11 +65,11 @@ model {
 
         ui = container 'Web UI' {
           description 'Provides a user interface for monitoring and managing data pipelines, allowing users to visualize the status of their workflows and troubleshoot any issues that arise.'
-          -> deamon 'manually trigger'
-          -> code-location 'visualize'
+          -> daemon 'manually triggers'
+          -> code-location 'loads definitions from'
         }
 
-        deamon = container 'Deamon' {
+        daemon = container 'Daemon' {
           description 'long-running process for creating job runs'
           -> code-location 'manages runs from'
         }
@@ -131,9 +131,10 @@ model {
     }
 
     security = system 'Security' {
-      description 'Ensures the security and compliance of the data platform, implementing access controls, encryption, and auditing mechanisms to protect sensitive data and maintain regulatory compliance.'
+      description 'Ensures the security and compliance of the data platform using Zero Trust Architecture (ZTA).'
+      link https://doi.org/10.6028/NIST.SP.800-207 'Authoritive description of ZTA.'
 
-      proxy = container 'Proxy' {
+      reverse-proxy = container 'Reverse Proxy' {
         description 'A reverse proxy that provides a single entry point for accessing the various components of the data platform, enforcing security policies and access controls.'
         link https://traefik.io/traefik 'Traefik as preferred open source reverse proxy solution.'
       }
@@ -143,12 +144,25 @@ model {
         link https://zitadel.com/docs 'Zitadel as preferred open source identity provider solution.'
       }
 
+      forward-auth = container 'Forward Authentication' {
+        description 'Authentication middleware that forwards to external identity providers'
+        link https://oauth2-proxy.github.io/oauth2-proxy/ 'OAuth2 Proxy as the preferred open source forwarding authenication service.'
+      }
+
       -> core 'secures'
       -> services 'secures'
       -> observability 'secures'
 
+      reverse-proxy -> forward-auth 'forwards authentication check to'
+      idp -> forward-auth 'provides authentication via'
+
     }
   }
+
+  ide = container 'Integrated Development Environment (IDE)' {
+    description 'Comprehensive central interface for programmers to write, build, test, and debug code.'
+  }
+
   developer -> srdp.core 'develops pipelines, monitors runs'
   consumer -> services 'consumes data products, dashboards'
   provider -> srdp 'provides managed services for'

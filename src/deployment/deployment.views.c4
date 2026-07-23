@@ -1,0 +1,10 @@
+views {
+  deployment view sein {
+    title 'SEIN dataplatform overview'
+    description '
+      Overview of SEIN data platform on UbiOps.
+    '
+    include *, intermax.*, laptop.*,
+    intermax.shared.*, intermax.shared.ubiops.*, intermax.security-vm.*, intermax.shared.ubiops.sein-omop-dev.*, intermax.shared.ubiops.sein-omop-dev.dagster.*, intermax.shared.ubiops.sein-omop-dev.default-storage.*, intermax.shared.ubiops.another-project.*, intermax.postgresql.*, github.*,
+  }
+}
